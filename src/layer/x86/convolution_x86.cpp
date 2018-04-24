@@ -16,6 +16,7 @@
 
 namespace ncnn {
 
+#include "convolution_1x1.h"
 #include "convolution_3x3.h"
 #include "convolution_5x5.h"
 
@@ -25,6 +26,11 @@ int Convolution_x86::forward(const Mat& bottom_blob, Mat& top_blob) const
 {
     // convolv with NxN kernel
     // value = value + bias
+
+    if (bottom_blob.dims != 3)
+    {
+        return Convolution::forward(bottom_blob, top_blob);
+    }
 
     if (kernel_w != kernel_h || stride_w != stride_h)
     {
@@ -45,8 +51,8 @@ int Convolution_x86::forward(const Mat& bottom_blob, Mat& top_blob) const
     conv_func conv_func_table[5][5] =
     {
         {
-            0,
-            0,
+            conv1x1s1_sse,
+            conv1x1s2_sse,
             0,
             0,
             0

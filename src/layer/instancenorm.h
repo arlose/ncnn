@@ -12,19 +12,34 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#ifndef LAYER_SLICE_ARM_H
-#define LAYER_SLICE_ARM_H
+#ifndef LAYER_INSTANCENORM_H
+#define LAYER_INSTANCENORM_H
 
-#include "slice.h"
+#include "layer.h"
 
 namespace ncnn {
 
-class Slice_arm : public Slice
+class InstanceNorm : public Layer
 {
 public:
-    virtual int forward(const std::vector<Mat>& bottom_blobs, std::vector<Mat>& top_blobs) const;
+    InstanceNorm();
+
+    virtual int load_param(const ParamDict& pd);
+
+    virtual int load_model(const ModelBin& mb);
+
+    virtual int forward_inplace(Mat& bottom_top_blob) const;
+
+public:
+    // param
+    int channels;
+    float eps;
+
+    // model
+    Mat gamma_data;
+    Mat beta_data;
 };
 
 } // namespace ncnn
 
-#endif // LAYER_SLICE_ARM_H
+#endif // LAYER_INSTANCENORM_H
